@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package musician;
+
+service MusicianService {
+  rpc Connect(stream ControlMessage) returns (stream ControlMessage);
+}
+
+message Registration {
+  string hostname = 1;
+  string ip = 2;
+}
+
+message ControlMessage {
+  oneof kind {
+    Ping ping = 1;
+    Pong pong = 2;
+    Task task = 3;
+    TaskResult result = 4;
+    LockStatus lock_status = 5;
+    ErrorMessage error = 6;
+    Registration registration = 7;
+  }
+}
+
+message Ping {
+  string id = 1;
+  int64 timestamp = 2;
+}
+
+message Pong {
+  string id = 1;
+  int64 timestamp = 2;
+  int64 latency_ms = 3;
+}
+
+message Task {
+  string id = 1;
+  string csv_data = 2;
+}
+
+message TaskResult {
+  string id = 1;
+  string status = 2;
+  string log = 3;
+}
+
+message LockStatus {
+  string musician_id = 1;
+  bool locked = 2;
+  string locked_by_task = 3;
+}
+
+message ErrorMessage {
+  string error_text = 1;
+}
